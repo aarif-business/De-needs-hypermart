@@ -14,18 +14,24 @@ const FEATURES = [
 ]
 
 export default async function HomePage() {
-  const supabase = createClient()
+  let categories = null, featured = null, freshArrivals = null
 
-  const [{ data: categories, error: catError }, { data: featured, error: featError }, { data: freshArrivals, error: freshError }] = await Promise.all([
-
-    supabase.from('categories').select('*').order('sort_order'),
-    supabase.from('products').select('*, categories(*)').eq('is_featured', true).eq('is_active', true).limit(10),
-    supabase.from('products').select('*, categories(*)').eq('is_fresh_arrival', true).eq('is_active', true).limit(10),
-  ])
-
-  if (catError) console.error('[Categories error]', catError.message)
-  if (featError) console.error('[Featured error]', featError.message)
-  if (freshError) console.error('[Fresh arrivals error]', freshError.message)
+  try {
+    const supabase = createClient()
+    const [c, f, fr] = await Promise.all([
+      supabase.from('categories').select('*').order('sort_order'),
+      supabase.from('products').select('*, categories(*)').eq('is_featured', true).eq('is_active', true).limit(10),
+      supabase.from('products').select('*, categories(*)').eq('is_fresh_arrival', true).eq('is_active', true).limit(10),
+    ])
+    if (c.error) console.error('[Categories error]', c.error.message)
+    if (f.error) console.error('[Featured error]', f.error.message)
+    if (fr.error) console.error('[Fresh arrivals error]', fr.error.message)
+    categories = c.data
+    featured = f.data
+    freshArrivals = fr.data
+  } catch (e) {
+    console.error('[HomePage] Supabase init error:', e)
+  }
 
   return (
     <>

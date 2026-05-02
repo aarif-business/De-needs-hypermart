@@ -1,5 +1,4 @@
 'use client'
-import Image from 'next/image'
 import Link from 'next/link'
 import { ShoppingCart, Plus } from 'lucide-react'
 import { motion } from 'framer-motion'
@@ -7,6 +6,7 @@ import { Product } from '@/types/database'
 import { useCartStore } from '@/store/cartStore'
 import { formatPrice, getDiscountPercent } from '@/lib/utils'
 import { toast } from '@/components/ui/Toaster'
+import { ProductImage } from './ProductImage'
 
 interface Props {
   product: Product
@@ -42,17 +42,13 @@ export function ProductCard({ product, index = 0 }: Props) {
         <div className="group bg-white rounded-2xl border border-gray-100 overflow-hidden card-hover cursor-pointer">
           {/* Image */}
           <div className="relative aspect-square bg-gray-50 overflow-hidden">
-            {product.image_url ? (
-              <Image
-                src={product.image_url}
-                alt={product.name}
-                fill
-                className="object-cover group-hover:scale-105 transition-transform duration-500"
-                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-              />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center text-5xl">🛒</div>
-            )}
+            <ProductImage
+              src={product.image_url}
+              alt={product.name}
+              fill
+              className="object-cover group-hover:scale-105 transition-transform duration-500"
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            />
 
             {/* Badges */}
             <div className="absolute top-2 left-2 flex flex-col gap-1">

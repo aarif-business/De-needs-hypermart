@@ -1,10 +1,10 @@
 import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import { Metadata } from 'next'
-import Image from 'next/image'
 import { AddToCartButton } from '@/components/shop/AddToCartButton'
 import { formatPrice, getDiscountPercent } from '@/lib/utils'
 import { ProductGrid } from '@/components/shop/ProductGrid'
+import { ProductImage } from '@/components/shop/ProductImage'
 import { Package, Tag } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
@@ -46,11 +46,13 @@ export default async function ProductDetailPage({ params }: Props) {
       <div className="grid md:grid-cols-2 gap-10 mb-16">
         {/* Image */}
         <div className="relative aspect-square rounded-3xl overflow-hidden bg-gray-50 border">
-          {product.image_url ? (
-            <Image src={product.image_url} alt={product.name} fill className="object-cover" priority />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center text-8xl">🛒</div>
-          )}
+          <ProductImage
+            src={product.image_url}
+            alt={product.name}
+            fill
+            className="object-cover"
+            priority
+          />
           {discount > 0 && (
             <div className="absolute top-4 left-4 bg-brand-red text-white font-bold px-3 py-1.5 rounded-full text-sm">
               -{discount}% OFF
